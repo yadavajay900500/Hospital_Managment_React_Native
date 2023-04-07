@@ -7,6 +7,7 @@ import {
   ScrollView,
   FlatList,
   RefreshControl,
+  
   Image
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -36,7 +37,7 @@ const TaskAssignment = (props) => {
   // const [user, setUser] = useState(authUser);
   const [error, setError] = useState("");
   const [data, setData] = useState([]);
-  const [refeshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [task, setTasks] = useState(null)
   const [status,setStatus]=useState(null)
@@ -46,11 +47,13 @@ const TaskAssignment = (props) => {
 
 
 
-  const handleOnRefresh = () => {
+  const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // fetchStats();
-    setRefreshing(false);
-  };
+    setTimeout(() => {
+      getEmployeeData()
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   //call the fetch function initial render
   useEffect(() => {
@@ -59,8 +62,9 @@ const TaskAssignment = (props) => {
   }, []);
   const emplID = "EMP012"
   const getEmployeeData = async () => {
-    // axios.get('http:9cac-103-16-29-138.ngrok.io/employees').then((res) => {
-    axios.get(' http://localhost:5151/employees').then((res) => {
+    axios.get('http:859d-103-16-29-138.ngrok.io/employees').then((res) => {
+    // axios.get(' http://localhost:5151/employees').then((res) => {
+      console.log(res)
       const data = res.data.employees.filter((data) => data.emplID == emplID)
       console.log("##############",data)
       const task = data[0].tasks.map((res) => res.assignment)
@@ -97,7 +101,7 @@ const TaskAssignment = (props) => {
           <Image style={styles.logoImg} source={logo} />
         </TouchableOpacity>
         <View>
-          <Text style={styles.toBarText}>Dashboard</Text>
+          {/* <Text style={styles.toBarText}>Dashboard</Text> */}
         </View>
         <View style={styles.userIcon}>
           <TouchableOpacity>
@@ -118,14 +122,19 @@ const TaskAssignment = (props) => {
 
         <View style={styles.heading}>
           <Text style={styles.headingText}>My Task</Text>
-          <TouchableOpacity onPress={getEmployeeData}>
+          {/* <TouchableOpacity onPress={getEmployeeData}>
             <Text style={styles.refreshText}>Refresh</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
         </View>
       </View>
       <View style={{ flex: 1, width: "100%"}}>
-        <ScrollView style={styles.actionContainer}>
+        <ScrollView style={styles.actionContainer}
+         contentContainerStyle={styles.scrollView}
+         refreshControl={
+           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+         }
+        >
 
           {
             task && task.map((res,i) => {
@@ -156,7 +165,7 @@ const TaskAssignment = (props) => {
         </ScrollView> */}
       </View>
       <View style={styles.footer}>
-        <Text style={{ color: colors.secondary }}>Power By Salesforce</Text>
+        <Text style={{ color: colors.secondary }}>powered by salesforce</Text>
         <Image style={styles.footerImg} source={salseforceLogo} />
       </View>
     </View>
@@ -254,5 +263,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
 
-  }
+  },
+  scrollView: {
+    // flex: 1,
+    // backgroundColor: 'pink',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
 });

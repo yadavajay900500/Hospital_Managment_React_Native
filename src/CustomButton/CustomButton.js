@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.Gdx,
+    // backgroundColor: "#8b0000",
   },
   buttonText: {
     display:'flex',
@@ -48,14 +49,21 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     marginBottom: 4,
+    display:'flex',
     alignItems: "center",
+    justifyContent:'center',
     borderRadius: 10,
-    backgroundColor: colors.success,
+    backgroundColor: '#676767',
+    // backgroundColor: colors.success,
+
   },
   buttonTextDisabled: {
     fontWeight: "bold",
     color: colors.light,
     padding:0,
     width:'100%',
+    display:'flex',
+    justifyContent:'center',
+    // alignItems:'center'
   },
 });

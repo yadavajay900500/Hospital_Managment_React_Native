@@ -13,6 +13,7 @@ const colors = {
   dark: "#343A3F",
   muted: "#707981",
   white: "#FFFFFF",
+  Gdx:"#8b0000"
 };
 
 export default colors;

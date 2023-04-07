@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Button, Modal, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Button, Modal, TouchableOpacity, ScrollView ,  RefreshControl,
+} from 'react-native'
 import { colors } from '../constants';
 import { Ionicons } from '@expo/vector-icons'
 import CustomButton from '../CustomButton/CustomButton';
@@ -6,6 +7,8 @@ import { useEffect, useState } from 'react';
 import RemarkModel from '../Models/remarkModel';
 import CustomInput from '../CustomInput/CustomInput';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import PatientDetails from '../Components/PatientDetails/PatientDetails';
+import DropdownComponent from '../Components/Dropdown/Dropdown';
 
 // import io from 'socket.io-client';
 // import io from 'socket.io-client';
@@ -20,7 +23,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function TimmerStart(props) {
     console.log("&&&&&&&&&&&&&&&&&", props)
-    const { navigation } = props
+    const { navigation,route } = props
+    const todayTask=route?.params?.todayTask
+    console.log("!!!!!!",todayTask)
+    const [refeshing, setRefreshing] = useState(false);
+  const [orders, setOrders] = useState([]);
+
 
     const [employee, setEmployees] = useState(null)
     const [timer, setTimer] = useState(false);
@@ -65,7 +73,17 @@ function TimmerStart(props) {
 
     ]
 
-
+    const handleOnRefresh = () => {
+        setRefreshing(true);
+        // fetchOrders();
+        setRefreshing(false);
+      };
+      const handleOrderDetail = (item) => {
+        // navigation.navigate("myorderdetail", {
+        //   orderDetail: item,
+        //   Token: UserInfo.token,
+        // });
+      };
     return <>
         <View style={styles.container} >
             <View style={styles.TopBarContainer}>
@@ -78,6 +96,9 @@ function TimmerStart(props) {
                         color={colors.muted}
                     />
                 </TouchableOpacity>
+                <View>
+                    <Text style={styles.todayTask}>{todayTask}</Text>
+                </View>
             </View>
             <ScrollView style={{ flex: 1, width: "100%" }}>
 
@@ -107,9 +128,15 @@ function TimmerStart(props) {
                         {/* <View><CustomButton text={"Stop"} onPress={stopTimer} /></View> */}
                         <View><CustomButton text={"End"} onPress={ClearTimer} /></View>
                     </View>
+                <DropdownComponent/>
+
+                </View>
+                <View>
+
                 </View>
                 <View style={styles.saveButton}>
-                    <CustomButton text={"Remark"} onPress={toggleModal} />
+                    {/* <CustomButton text={"Remark"} onPress={toggleModal} /> */}
+
                     {/* <RemarkModel  model={showModal}/> */}
                     <View>
                         <Modal
@@ -132,7 +159,7 @@ function TimmerStart(props) {
                                 </View>
                                 <View style={{ width: '100%' }}>
                                     <Text style={styles.modalText}>Assignment Task Remarks</Text>
-                                    <CustomInput />
+                                    {/* <CustomInput /> */}
                                 </View>
 
                                 <View style={styles.remarkButton}>
@@ -169,13 +196,35 @@ function TimmerStart(props) {
                     }
                 </ScrollView> */}
                 <View style={styles.bottomContainer}>
-                    <View style={styles.buttomWrapper}>
+                    {/* <View style={styles.buttomWrapper}>
                             <Text style={styles.buttomTextA}>Name: &nbsp;Aman Kumar</Text>
                             <Text style={styles.buttomTextA}>age: &nbsp; 45</Text>
                             <Text style={styles.buttomTextA}>VIP/Non-VIP: &nbsp; VIP</Text>
-                            <Text style={styles.buttomTextA}>Bad No.: &nbsp; B1-230</Text>
+                            <Text style={styles.buttomTextA}>Bed No.: &nbsp; B1-230</Text>
                             <Text style={styles.buttomTextA}>Department: &nbsp; Cardio</Text>
-                    </View>
+                    </View> */}
+                    <ScrollView
+                        style={{ flex: 1, width: "100%", padding: 20 }}
+                        showsVerticalScrollIndicator={false}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refeshing}
+                                onRefresh={handleOnRefresh}
+                            />
+                        }
+                    >
+                        {/* {orders && orders.map((order, index) => {
+                            return ( */}
+                                <PatientDetails
+                                    // item={order}
+                                    // key={index}
+                                    // onPress={() => handleOrderDetail(order)}
+                                    navigation={navigation}
+                                />
+                            {/* );
+                        })} */}
+                        <View style={styles.emptyView}></View>
+                    </ScrollView>
                 </View>
 
             </ScrollView>
@@ -232,7 +281,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        margin: 10,
+        // margin: 10,
         marginEnd: 20,
         marginLeft: 20
         // backgroundColor:'red'
@@ -258,7 +307,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        // backgroundColor:'red'
     },
 
     TextContainer: {
@@ -398,13 +448,24 @@ const styles = StyleSheet.create({
 
 
     },
-    buttomWrapper:{
-        padding:10
+    buttomWrapper: {
+        // padding:10
+        marginBottom: 10,
+        marginTop: 10,
+        width: "100%",
+        padding: 5,
+        backgroundColor: colors.white,
+        elevation: 5,
+        paddingHorizontal: 20,
     },
-    buttomTextA:{
-        paddingBottom:10,
+    buttomTextA: {
+        paddingBottom: 10,
+        fontSize: 16,
+        fontWeight: 600
+    },
+    todayTask:{
         fontSize:16,
-        fontWeight:600
+        fontWeight:600 
     }
 
 

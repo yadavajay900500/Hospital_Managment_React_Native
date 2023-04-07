@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { colors } from "../constants";
 import CustomButton from '../CustomButton'
@@ -11,6 +11,17 @@ const OptionList = (props) => {
   const taskType = [
     "success", 'delay', 'pendding'
   ]
+const [disabledButton,setdisabledButton]=useState(false);
+
+
+useEffect(()=>{
+  if(status == 'completed'){
+    setdisabledButton(true)
+   }
+})
+  const startButton=()=>{
+       
+  }
   return (
     <>
       <View style={[styles.container, { backgroundColor: colors.white }]}>
@@ -28,7 +39,11 @@ const OptionList = (props) => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButton text={"Start"} onPress={() => navigation.navigate("Timmer", { emplID: emplID })} />
+            <CustomButton disabled={disabledButton} text={"Start"} onPress={() => navigation.navigate("Timmer", 
+            { 
+              emplID: emplID,
+              todayTask:text
+              })} />
           </View>
         </View>
       </View>
@@ -100,7 +115,7 @@ const styles = StyleSheet.create({
   dateContainer:{
       display:'flex',
       flexDirection:'row',
-      marginEnd:60,
+      // marginEnd:60,
       paddingTop:2
   },
 
